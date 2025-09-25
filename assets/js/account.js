@@ -55,6 +55,24 @@
     
     // Animate stats with counter effect
     animateStats();
+    
+    // Setup logout button after dashboard is shown
+    setTimeout(() => {
+      const logoutBtn = $('#btn-logout');
+      if (logoutBtn) {
+        console.log('Setting up logout button after dashboard shown');
+        // Remove any existing listeners
+        logoutBtn.replaceWith(logoutBtn.cloneNode(true));
+        const newLogoutBtn = $('#btn-logout');
+        newLogoutBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('Dashboard logout button clicked');
+          logout();
+          return false;
+        });
+      }
+    }, 100);
   }
 
   function animateStats() {
@@ -99,11 +117,30 @@
       const data = await res.json().catch(()=>({}));
       if (!res.ok) {
         const status = getStatus();
-        if (status) status.textContent = data?.error || 'ارسال کد ناموفق بود.';
+        if (status) {
+          let errorMsg = data?.error || 'ارسال کد ناموفق بود.';
+          if (res.status === 502 || errorMsg.includes('failed to send code')) {
+            errorMsg = `خطا در ارسال کد. لطفاً مطمئن شوید که:<br>
+              <small style="color:var(--muted); display:block; margin-top:4px;">
+                • ربات <a href="https://t.me/protoolsverify_bot" target="_blank" style="color:var(--accent);">@protoolsverify_bot</a> را استارت کرده‌اید<br>
+                • شناسه عددی تلگرام صحیح است
+              </small>`;
+          }
+          status.innerHTML = errorMsg;
+        }
         return;
       }
       const status2 = getStatus();
-      if (status2) status2.textContent = 'کد ارسال شد. تلگرام خود را بررسی کنید.';
+      if (status2) {
+        status2.innerHTML = `
+          کد ارسال شد. تلگرام خود را بررسی کنید.<br>
+          <small style="color:var(--muted); margin-top:4px; display:block;">
+            اگر کد دریافت نکردید، مطمئن شوید که ربات 
+            <a href="https://t.me/protoolsverify_bot" target="_blank" style="color:var(--accent);">@protoolsverify_bot</a> 
+            را استارت کرده‌اید.
+          </small>
+        `;
+      }
       $('#otp-section').style.display = 'block';
     } catch (error) {
       const status = getStatus();
@@ -163,12 +200,13 @@
     if (otpInput) otpInput.value = '';
     if (otpSection) otpSection.style.display = 'none';
     
-    // Redirect to home page after a short delay to show the logout message
+    // Stay on the same page and show login section
+    updateState();
+    
+    // Clear the status message after a short delay
     setTimeout(() => {
-      // Check if we're in a subdirectory (pages folder)
-      const base = location.pathname.includes('/pages/') ? '../' : '';
-      location.href = base + 'index.html';
-    }, 1000);
+      if (status) status.textContent = '';
+    }, 2000);
   }
 
   function setupDashboardActions() {
@@ -203,20 +241,44 @@
     }
   }
 
+  
+
   document.addEventListener('DOMContentLoaded', ()=>{
     // Wait a bit for components to load
     setTimeout(() => {
       $('#btn-request-code')?.addEventListener('click', requestCode);
       $('#btn-verify')?.addEventListener('click', verify);
+      
+      
       // Handle logout buttons (in login and dashboard sections)
       document.addEventListener('click', (e) => {
         if (e.target.id === 'btn-logout') {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          console.log('Logout button clicked');
           logout();
+          return false;
         }
       });
       
+      // Also add direct event listener for logout button
+      const logoutBtn = $('#btn-logout');
+      if (logoutBtn) {
+        console.log('Direct logout button found, adding event listener');
+        logoutBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('Direct logout button clicked');
+          logout();
+          return false;
+        });
+      }
+      
       setupDashboardActions();
       updateState();
+      
+      
     }, 500);
   });
 })();

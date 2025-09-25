@@ -134,14 +134,104 @@ a:hover { color: var(--primary-2); }
 .brand-text p { margin: 0; font-size: .85rem; color: var(--muted); }
 
 .top-nav { display: flex; gap: 12px; }
-.top-nav a, .top-nav .nav-link { padding: 8px 12px; border-radius: 10px; border: 1px solid transparent; color: var(--text); background: transparent; cursor: pointer; }
-.top-nav a:hover, .top-nav .nav-link:hover { background: rgba(255,255,255,0.06); border-color: var(--stroke); }
+.top-nav a, .top-nav .nav-link { 
+  padding: 8px 12px; 
+  border-radius: 10px; 
+  border: 1px solid transparent; 
+  color: var(--text); 
+  background: transparent; 
+  cursor: pointer; 
+  transition: all .2s ease;
+  position: relative;
+}
+.top-nav a:hover, .top-nav .nav-link:hover { 
+  background: rgba(255,255,255,0.06); 
+  border-color: var(--stroke); 
+  transform: translateY(-1px);
+}
+
+/* Dropdown indicator for nav items with menus */
+.nav-item > .nav-link::after {
+  content: "▼";
+  font-size: 0.7rem;
+  margin-left: 6px;
+  transition: transform .2s ease;
+  color: var(--muted);
+}
+
+.nav-item.open > .nav-link::after {
+  transform: rotate(180deg);
+}
+
+.nav-item.open > .nav-link {
+  background: rgba(247, 126, 45, 0.1);
+  border-color: rgba(247, 126, 45, 0.3);
+  color: var(--accent);
+}
 .nav-item { position: relative; }
-.nav-item .menu { position: absolute; top: calc(100% + 8px); left: 0; min-width: 220px; padding: 8px; display: flex; flex-direction: column; gap: 4px; opacity: 0; transform: translateY(-6px) scale(.98); pointer-events: none; transition: opacity .18s ease, transform .18s ease; z-index: 30; }
-.nav-item.open .menu { opacity: 1; transform: none; pointer-events: auto; }
-.nav-item .menu a { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; }
-.nav-item .menu a img { width: 18px; height: 18px; flex: 0 0 18px; }
-.nav-item .menu a:hover { background: rgba(255,255,255,0.06); }
+.nav-item .menu { 
+  position: absolute; 
+  top: calc(100% + 12px); 
+  left: 50%; 
+  transform: translateX(-50%) translateY(-6px) scale(.98); 
+  min-width: 240px; 
+  padding: 12px; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 6px; 
+  opacity: 0; 
+  pointer-events: none; 
+  transition: opacity .25s ease, transform .25s ease; 
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+.nav-item.open .menu { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); pointer-events: auto; }
+.nav-item .menu a { 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+  padding: 12px 16px; 
+  border-radius: 12px; 
+  color: var(--text);
+  text-decoration: none;
+  transition: all .2s ease;
+  border: 1px solid transparent;
+  opacity: 0;
+  transform: translateY(-4px);
+  animation: menuItemFadeIn .3s ease forwards;
+}
+
+@keyframes menuItemFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.nav-item .menu a:nth-child(1) { animation-delay: 0.05s; }
+.nav-item .menu a:nth-child(2) { animation-delay: 0.1s; }
+.nav-item .menu a:nth-child(3) { animation-delay: 0.15s; }
+.nav-item .menu a:nth-child(4) { animation-delay: 0.2s; }
+.nav-item .menu a img { 
+  width: 20px; 
+  height: 20px; 
+  flex: 0 0 20px; 
+  opacity: 0.8;
+  transition: opacity .2s ease;
+}
+.nav-item .menu a:hover { 
+  background: rgba(247, 126, 45, 0.15); 
+  border-color: rgba(247, 126, 45, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(247, 126, 45, 0.2);
+}
+.nav-item .menu a:hover img {
+  opacity: 1;
+}
 
 /* Scroll lock when menu open */
 body.nav-open { overflow: hidden; }
