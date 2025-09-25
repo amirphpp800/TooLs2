@@ -38,9 +38,9 @@
     const userId = $('#user-id');
     const userPlan = $('#user-plan');
     
-    if (userName) userName.textContent = user.name || 'کاربر گرامی';
-    if (userId) userId.textContent = `ID: ${maskId(user.telegram_id)}`;
-    if (userPlan) userPlan.textContent = user.plan || 'پلن پایه';
+    if (userName) userName.textContent = user.name || '';
+    if (userId) userId.textContent = user.telegram_id ? `ID: ${maskId(user.telegram_id)}` : '';
+    if (userPlan) userPlan.textContent = user.plan || '';
     
     // Update stats
     const downloadCount = $('#download-count');
@@ -48,10 +48,10 @@
     const daysLeft = $('#days-left');
     const trafficUsed = $('#traffic-used');
     
-    if (downloadCount) downloadCount.textContent = user.downloads || '0';
-    if (configCount) configCount.textContent = user.configs || '0';
-    if (daysLeft) daysLeft.textContent = user.days_left || '∞';
-    if (trafficUsed) trafficUsed.textContent = user.traffic_used || '0 GB';
+    if (downloadCount) downloadCount.textContent = user.downloads || '';
+    if (configCount) configCount.textContent = user.configs || '';
+    if (daysLeft) daysLeft.textContent = user.days_left || '';
+    if (trafficUsed) trafficUsed.textContent = user.traffic_used || '';
     
     // Animate stats with counter effect
     animateStats();

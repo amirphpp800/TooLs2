@@ -1,0 +1,17 @@
+{
+  "name": "pro-tools-website",
+  "version": "1.0.0",
+  "description": "Pro TooLs - ابزارها و دانلودهای ضروری در یک‌جا",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler pages dev .",
+    "deploy": "wrangler pages deploy .",
+    "build": "echo 'No build step required'"
+  },
+  "keywords": ["vpn", "dns", "tools", "persian", "farsi", "cloudflare"],
+  "author": "Pro TooLs Team",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}

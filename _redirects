@@ -1,0 +1,2 @@
+# API redirects for Cloudflare Pages Functions
+/api/* /functions/api/:splat 200
