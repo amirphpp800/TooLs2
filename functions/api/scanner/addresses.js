@@ -9,7 +9,7 @@ export async function onRequestGet({ request, env }) {
   
   try {
     // Get available addresses for the country
-    const addresses = await env.DATABASE.get(`kv:scanner_addresses_${country}`, { type: 'json' }) || [];
+    const addresses = await env.DATABASE.get(`scanner_addresses_${country}`, { type: 'json' }) || [];
     
     if (addresses.length === 0) {
       return json({ error: 'No addresses available for this country' }, 404);
@@ -21,16 +21,16 @@ export async function onRequestGet({ request, env }) {
 
     // Remove the address from available list
     addresses.splice(randomIndex, 1);
-    await env.DATABASE.put(`kv:scanner_addresses_${country}`, JSON.stringify(addresses));
+    await env.DATABASE.put(`scanner_addresses_${country}`, JSON.stringify(addresses));
 
     // Add to used addresses list
-    const usedAddresses = await env.DATABASE.get(`kv:used_addresses_${country}`, { type: 'json' }) || [];
+    const usedAddresses = await env.DATABASE.get(`used_addresses_${country}`, { type: 'json' }) || [];
     usedAddresses.push({
       address: selectedAddress,
       timestamp: Date.now(),
       user_ip: request.headers.get('CF-Connecting-IP') || 'unknown'
     });
-    await env.DATABASE.put(`kv:used_addresses_${country}`, JSON.stringify(usedAddresses));
+    await env.DATABASE.put(`used_addresses_${country}`, JSON.stringify(usedAddresses));
 
     return json({ 
       address: selectedAddress,
@@ -49,8 +49,8 @@ export async function onRequestPost({ request, env }) {
     const body = await request.json();
     const country = body?.country || 'uk';
     
-    const addresses = await env.DATABASE.get(`kv:scanner_addresses_${country}`, { type: 'json' }) || [];
-    const usedAddresses = await env.DATABASE.get(`kv:used_addresses_${country}`, { type: 'json' }) || [];
+    const addresses = await env.DATABASE.get(`scanner_addresses_${country}`, { type: 'json' }) || [];
+    const usedAddresses = await env.DATABASE.get(`used_addresses_${country}`, { type: 'json' }) || [];
     
     return json({
       country,
