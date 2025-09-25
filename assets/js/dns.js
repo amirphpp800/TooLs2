@@ -1,23 +1,34 @@
 (function(){
   'use strict';
   const $ = (s, c=document)=>c.querySelector(s);
-  // KV Storage functions
-  async function getFromKV(key) {
+  // Scanner API helpers (no direct KV access from public)
+  async function fetchScannerStats(country){
     try {
-      const res = await fetch(`/api/kv/${key}`);
-      if (!res.ok) return null;
-      return await res.json();
-    } catch (e) {
-      return null;
+      const res = await fetch('/api/scanner/addresses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ country })
+      });
+      if (!res.ok) throw new Error('stats error');
+      const data = await res.json();
+      return {
+        total: Number(data?.total) || 0,
+        available: Number(data?.available) || 0,
+        used: Number(data?.used) || 0,
+      };
+    } catch {
+      return { total: 0, available: 0, used: 0 };
     }
   }
 
-  async function saveToKV(key, value) {
-    await fetch(`/api/kv/${key}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(value)
-    });
+  async function fetchScannerAddress(country){
+    const res = await fetch(`/api/scanner/addresses?country=${encodeURIComponent(country)}`);
+    if (!res.ok) {
+      const data = await res.json().catch(()=>({}));
+      const msg = data?.error || `HTTP ${res.status}`;
+      throw new Error(msg);
+    }
+    return await res.json(); // { address, remaining }
   }
 
   // Load live stats for all countries
@@ -28,12 +39,10 @@
     
     for (const country of countries) {
       try {
-        const addresses = await getFromKV(`scanner_addresses_${country}`) || [];
-        const usedAddresses = await getFromKV(`used_addresses_${country}`) || [];
-        
-        const total = addresses.length + usedAddresses.length;
-        const free = addresses.length;
-        const used = usedAddresses.length;
+        const stats = await fetchScannerStats(country);
+        const total = stats.total;
+        const free = stats.available;
+        const used = stats.used;
         
         updateCountryStats(country, total, free, used);
         
@@ -55,9 +64,9 @@
           }
           // Check 24-hour limit
           else if (userId) {
-            const canRequest = await canUserGetAddress(country, userId);
+            const canRequest = await canUserGetAddressLocal(country, userId);
             if (!canRequest) {
-              const remainingTime = await getRemainingTime(country, userId);
+              const remainingTime = getRemainingTimeLocal(country, userId);
               const timeText = formatRemainingTime(remainingTime);
               btn.disabled = true;
               btn.textContent = 'محدودیت 24 ساعته';
@@ -126,51 +135,32 @@
     return btoa(token).substring(0, 16);
   }
 
-  // Check if user can get address from this country (24h limit)
-  async function canUserGetAddress(country, userId) {
-    const userRequests = await getFromKV(`user_requests_${userId}_${country}`) || [];
-    const now = Date.now();
-    const oneDayAgo = now - (24 * 60 * 60 * 1000); // 24 hours in milliseconds
-    
-    // Filter requests from last 24 hours
-    const recentRequests = userRequests.filter(req => req.timestamp > oneDayAgo);
-    
-    return recentRequests.length === 0;
+  // 24h limit using localStorage (client-side)
+  function getLocalLimitKey(country, userId){
+    return `pt_request_${userId}_${country}`;
   }
 
-  // Record user request
-  async function recordUserRequest(country, userId, address) {
-    const userRequests = await getFromKV(`user_requests_${userId}_${country}`) || [];
+  function canUserGetAddressLocal(country, userId){
+    const key = getLocalLimitKey(country, userId);
+    const value = localStorage.getItem(key);
+    if (!value) return true;
+    const last = Number(value) || 0;
     const now = Date.now();
-    
-    // Add new request
-    userRequests.push({
-      timestamp: now,
-      address: address,
-      country: country
-    });
-    
-    // Keep only last 7 days of requests to prevent unlimited growth
-    const sevenDaysAgo = now - (7 * 24 * 60 * 60 * 1000);
-    const filteredRequests = userRequests.filter(req => req.timestamp > sevenDaysAgo);
-    
-    await saveToKV(`user_requests_${userId}_${country}`, filteredRequests);
+    return (now - last) >= (24 * 60 * 60 * 1000);
   }
 
-  // Get remaining time until user can request again
-  async function getRemainingTime(country, userId) {
-    const userRequests = await getFromKV(`user_requests_${userId}_${country}`) || [];
-    const now = Date.now();
-    const oneDayAgo = now - (24 * 60 * 60 * 1000);
-    
-    const recentRequests = userRequests.filter(req => req.timestamp > oneDayAgo);
-    
-    if (recentRequests.length === 0) return 0;
-    
-    const lastRequest = Math.max(...recentRequests.map(req => req.timestamp));
-    const nextAllowedTime = lastRequest + (24 * 60 * 60 * 1000);
-    
-    return Math.max(0, nextAllowedTime - now);
+  function recordUserRequestLocal(country, userId){
+    const key = getLocalLimitKey(country, userId);
+    localStorage.setItem(key, String(Date.now()));
+  }
+
+  function getRemainingTimeLocal(country, userId){
+    const key = getLocalLimitKey(country, userId);
+    const last = Number(localStorage.getItem(key) || '0');
+    if (!last) return 0;
+    const elapsed = Date.now() - last;
+    const dayMs = 24 * 60 * 60 * 1000;
+    return elapsed >= dayMs ? 0 : (dayMs - elapsed);
   }
 
   function formatRemainingTime(milliseconds) {
@@ -199,40 +189,24 @@
       }
 
       // Check 24-hour limit
-      const canRequest = await canUserGetAddress(country, userId);
+      const canRequest = canUserGetAddressLocal(country, userId);
       if (!canRequest) {
-        const remainingTime = await getRemainingTime(country, userId);
+        const remainingTime = getRemainingTimeLocal(country, userId);
         const timeText = formatRemainingTime(remainingTime);
         alert(`شما در 24 ساعت گذشته از این کشور آدرس دریافت کرده‌اید.\n\nزمان باقیمانده تا درخواست بعدی: ${timeText}`);
         return;
       }
 
-      const addresses = await getFromKV(`scanner_addresses_${country}`) || [];
-      
-      if (addresses.length === 0) {
+      // Ask server to provide and atomically consume an address
+      const data = await fetchScannerAddress(country);
+      const selectedAddress = data?.address;
+      if (!selectedAddress) {
         alert('متأسفانه آدرسی برای این کشور موجود نیست.');
         return;
       }
 
-      const randomIndex = Math.floor(Math.random() * addresses.length);
-      const selectedAddress = addresses[randomIndex];
-
-      // Remove address from available list
-      addresses.splice(randomIndex, 1);
-      await saveToKV(`scanner_addresses_${country}`, addresses);
-
-      // Add to used addresses list
-      const usedAddresses = await getFromKV(`used_addresses_${country}`) || [];
-      usedAddresses.push({
-        address: selectedAddress,
-        timestamp: Date.now(),
-        user_id: userId,
-        country: country
-      });
-      await saveToKV(`used_addresses_${country}`, usedAddresses);
-
-      // Record user request for 24h limit
-      await recordUserRequest(country, userId, selectedAddress);
+      // Record client-side 24h limit
+      recordUserRequestLocal(country, userId);
 
       showAddressModal(selectedAddress);
       loadLiveStats();
