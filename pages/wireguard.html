@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pro TooLs — WireGuard</title>
+  <meta name="color-scheme" content="dark" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://api.iconify.design; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https:; font-src 'self';" />
+  <link rel="icon" href="../icons/Logo.svg" type="image/svg+xml" />
+  <link rel="preload" href="../Font/DanaFaNum-Regular.woff" as="font" type="font/woff" crossorigin>
+  <link rel="preload" href="../Font/DanaFaNum-Bold.woff" as="font" type="font/woff" crossorigin>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body>
+  <div id="app">
+    <div data-component="header"></div>
+    <main id="main">
+      <section class="section">
+        <div class="container">
+          <article class="card glass" style="padding:24px;">
+            <div class="card-header" style="justify-content:center; margin-bottom:24px;">
+              <img src="../icons/wireguard.svg" alt="WireGuard" style="width:48px; height:48px;" />
+              <h2 style="margin:0; color:var(--text);">وایرگارد</h2>
+            </div>
+            
+            <div style="text-align:center; margin-bottom:32px;">
+              <p style="color:var(--muted); font-size:1.1rem; line-height:1.6;">
+                WireGuard یک پروتکل VPN مدرن، سریع و امن است که برای حفاظت از حریم خصوصی شما طراحی شده است.
+              </p>
+            </div>
+
+            <!-- Download Links -->
+            <div style="margin-bottom:32px;">
+              <h3 style="color:var(--text); margin-bottom:16px; text-align:center;">دانلود کلاینت WireGuard</h3>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
+                <a href="https://play.google.com/store/apps/details?id=com.wireguard.android" 
+                   class="btn primary" 
+                   style="display:flex; align-items:center; gap:12px; padding:16px; text-decoration:none; justify-content:center;"
+                   target="_blank" rel="noopener">
+                  <img src="../icons/android.svg" alt="اندروید" style="width:24px; height:24px;" />
+                  دانلود برای اندروید
+                </a>
+                <a href="https://apps.apple.com/us/app/wireguard/id1441195209" 
+                   class="btn primary" 
+                   style="display:flex; align-items:center; gap:12px; padding:16px; text-decoration:none; justify-content:center;"
+                   target="_blank" rel="noopener">
+                  <img src="../icons/apple.svg" alt="آیفون" style="width:24px; height:24px;" />
+                  دانلود برای آیفون
+                </a>
+                <a href="https://www.wireguard.com/install/" 
+                   class="btn primary" 
+                   style="display:flex; align-items:center; gap:12px; padding:16px; text-decoration:none; justify-content:center;"
+                   target="_blank" rel="noopener">
+                  <img src="../icons/windows.svg" alt="ویندوز" style="width:24px; height:24px;" />
+                  دانلود برای ویندوز
+                </a>
+              </div>
+            </div>
+
+            <!-- Configuration Guide -->
+            <div style="margin-bottom:32px;">
+              <h3 style="color:var(--text); margin-bottom:16px; text-align:center;">راهنمای تنظیمات</h3>
+              <div style="background:rgba(255,255,255,0.03); border-radius:12px; padding:20px; border:1px solid var(--stroke);">
+                <ol style="color:var(--muted); line-height:1.8; padding-right:20px;">
+                  <li>کلاینت WireGuard را بر روی دستگاه خود نصب کنید</li>
+                  <li>فایل کانفیگ (.conf) را از طریق تلگرام دریافت کنید</li>
+                  <li>فایل کانفیگ را در برنامه WireGuard وارد کنید</li>
+                  <li>روی دکمه اتصال کلیک کنید تا به VPN متصل شوید</li>
+                </ol>
+              </div>
+            </div>
+
+            <!-- Features -->
+            <div style="margin-bottom:32px;">
+              <h3 style="color:var(--text); margin-bottom:16px; text-align:center;">ویژگی‌های WireGuard</h3>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:16px;">
+                <div style="background:rgba(255,255,255,0.03); border-radius:12px; padding:16px; text-align:center;">
+                  <img src="https://api.iconify.design/material-symbols/speed.svg?color=%23F77E2D" alt="سرعت" style="width:32px; height:32px; margin-bottom:8px;" />
+                  <h4 style="margin:0 0 8px; color:var(--text);">سرعت بالا</h4>
+                  <p style="margin:0; color:var(--muted); font-size:0.9rem;">عملکرد بهینه و سرعت اتصال بالا</p>
+                </div>
+                <div style="background:rgba(255,255,255,0.03); border-radius:12px; padding:16px; text-align:center;">
+                  <img src="https://api.iconify.design/material-symbols/security.svg?color=%2300D4AA" alt="امنیت" style="width:32px; height:32px; margin-bottom:8px;" />
+                  <h4 style="margin:0 0 8px; color:var(--text);">امنیت بالا</h4>
+                  <p style="margin:0; color:var(--muted); font-size:0.9rem;">رمزگذاری قوی و امنیت بی‌نظیر</p>
+                </div>
+                <div style="background:rgba(255,255,255,0.03); border-radius:12px; padding:16px; text-align:center;">
+                  <img src="https://api.iconify.design/material-symbols/battery-saver.svg?color=%23FFD93D" alt="باتری" style="width:32px; height:32px; margin-bottom:8px;" />
+                  <h4 style="margin:0 0 8px; color:var(--text);">مصرف کم باتری</h4>
+                  <p style="margin:0; color:var(--muted); font-size:0.9rem;">بهینه‌سازی شده برای دستگاه‌های موبایل</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Support -->
+            <div style="text-align:center; padding-top:24px; border-top:1px solid var(--stroke);">
+              <p style="color:var(--muted); margin-bottom:16px;">
+                برای دریافت کانفیگ یا کمک در تنظیمات، با پشتیبانی تماس بگیرید
+              </p>
+              <a href="https://t.me/ProTooLsSupport" 
+                 class="btn secondary" 
+                 style="display:inline-flex; align-items:center; gap:8px; padding:12px 24px; text-decoration:none;"
+                 target="_blank" rel="noopener">
+                <img src="https://api.iconify.design/material-symbols/support-agent.svg?color=%23F77E2D" alt="پشتیبانی" style="width:20px; height:20px;" />
+                تماس با پشتیبانی
+              </a>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+    <div data-component="footer"></div>
+  </div>
+  <script src="../assets/js/config.js" defer></script>
+  <script src="../assets/js/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pro TooLs — حساب کاربری</title>
+  <meta name="color-scheme" content="dark" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://api.iconify.design; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https:; font-src 'self';" />
+  <link rel="icon" href="../icons/Logo.svg" type="image/svg+xml" />
+  <link rel="preload" href="../Font/DanaFaNum-Regular.woff" as="font" type="font/woff" crossorigin>
+  <link rel="preload" href="../Font/DanaFaNum-Bold.woff" as="font" type="font/woff" crossorigin>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body>
+  <div id="app">
+    <div data-component="header"></div>
+    <main id="main">
+      <!-- Login Section -->
+      <section id="login-section" class="section">
+        <div class="container" style="max-width:480px;">
+          <article class="card glass" style="text-align:center; padding:24px;">
+            <div class="card-header" style="justify-content:center; margin-bottom:16px;">
+              <img src="https://api.iconify.design/material-symbols/account-circle.svg?color=%23F77E2D" alt="account" style="width:32px; height:32px;" />
+              <h3 style="margin:0;">ورود به حساب کاربری</h3>
+            </div>
+            
+            <p style="color:var(--muted); margin:0 0 20px;">برای دسترسی به داشبورد، با شناسه عددی تلگرام وارد شوید.</p>
+            
+            <div id="login-form">
+              <div style="margin-bottom:16px;">
+                <input id="tg-id" placeholder="شناسه عددی تلگرام" inputmode="numeric" style="width:100%; padding:12px 16px; border-radius:12px; background:rgba(255,255,255,0.04); color:var(--text); border:1px solid var(--stroke); text-align:center;" />
+              </div>
+              <div style="margin-bottom:16px;">
+                <button class="btn primary" id="btn-request-code" style="width:100%; padding:12px;">دریافت کد تایید</button>
+              </div>
+              
+              <div id="otp-section" style="display:none;">
+                <div style="margin-bottom:16px;">
+                  <input id="otp" placeholder="کد ۴ رقمی" inputmode="numeric" style="width:100%; padding:12px 16px; border-radius:12px; background:rgba(255,255,255,0.04); color:var(--text); border:1px solid var(--stroke); text-align:center;" />
+                </div>
+                <div style="margin-bottom:16px;">
+                  <button class="btn primary" id="btn-verify" style="width:100%; padding:12px; background: linear-gradient(135deg, #22c55e, #16a34a); border-color: #16a34a;">تایید و ورود</button>
+                </div>
+              </div>
+            </div>
+            
+            <div id="auth-status" style="color:var(--muted); margin:16px 0; min-height:20px;"></div>
+            
+            <div style="margin-top:20px; padding-top:20px; border-top:1px solid var(--stroke);">
+              <p style="color:var(--muted); font-size:0.9rem; margin:0 0 12px;">برای مشاهده نمونه داشبورد:</p>
+              <button class="btn secondary" id="btn-demo" style="width:100%; padding:10px;">
+                نمایش داشبورد نمونه
+              </button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Dashboard Section -->
+      <section id="dashboard-section" class="section" style="display:none;">
+        <div class="container">
+          <!-- User Profile Header -->
+          <div class="dashboard-header">
+            <article class="card glass" style="padding:24px; margin-bottom:24px;">
+              <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+                <div class="user-avatar">
+                  <img src="https://api.iconify.design/material-symbols/account-circle.svg?color=%23F77E2D" alt="پروفایل" style="width:64px; height:64px;" />
+                </div>
+                <div style="flex:1; min-width:200px;">
+                  <h2 id="user-name" style="margin:0 0 8px; color:var(--text);">کاربر گرامی</h2>
+                  <p id="user-id" style="margin:0; color:var(--muted); font-size:0.9rem;">ID: ******</p>
+                  <div style="display:flex; gap:8px; margin-top:8px;">
+                    <span class="badge ok">فعال</span>
+                    <span class="badge total" id="user-plan">پلن پایه</span>
+                  </div>
+                </div>
+                <div>
+                  <button class="btn" id="btn-logout" style="padding:8px 16px;">خروج</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Stats Cards -->
+          <div class="stats-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:24px;">
+            <article class="card glass" style="padding:20px; text-align:center;">
+              <div style="margin-bottom:12px;">
+                <img src="https://api.iconify.design/material-symbols/download.svg?color=%23F77E2D" alt="دانلود" style="width:32px; height:32px;" />
+              </div>
+              <h4 style="margin:0 0 4px; color:var(--text);">دانلودها</h4>
+              <p style="margin:0; font-size:1.5rem; font-weight:600; color:var(--accent);" id="download-count">0</p>
+            </article>
+
+            <article class="card glass" style="padding:20px; text-align:center;">
+              <div style="margin-bottom:12px;">
+                <img src="https://api.iconify.design/material-symbols/vpn-key.svg?color=%2300D4AA" alt="کانفیگ" style="width:32px; height:32px;" />
+              </div>
+              <h4 style="margin:0 0 4px; color:var(--text);">کانفیگ‌های فعال</h4>
+              <p style="margin:0; font-size:1.5rem; font-weight:600; color:#00D4AA;" id="config-count">0</p>
+            </article>
+
+            <article class="card glass" style="padding:20px; text-align:center;">
+              <div style="margin-bottom:12px;">
+                <img src="https://api.iconify.design/material-symbols/schedule.svg?color=%23FFD93D" alt="زمان" style="width:32px; height:32px;" />
+              </div>
+              <h4 style="margin:0 0 4px; color:var(--text);">روزهای باقیمانده</h4>
+              <p style="margin:0; font-size:1.5rem; font-weight:600; color:#FFD93D;" id="days-left">∞</p>
+            </article>
+
+            <article class="card glass" style="padding:20px; text-align:center;">
+              <div style="margin-bottom:12px;">
+                <img src="https://api.iconify.design/material-symbols/data-usage.svg?color=%23A855F7" alt="ترافیک" style="width:32px; height:32px;" />
+              </div>
+              <h4 style="margin:0 0 4px; color:var(--text);">ترافیک مصرفی</h4>
+              <p style="margin:0; font-size:1.5rem; font-weight:600; color:#A855F7;" id="traffic-used">0 GB</p>
+            </article>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="quick-actions" style="margin-bottom:24px;">
+            <article class="card glass" style="padding:20px;">
+              <h3 style="margin:0 0 16px; color:var(--text);">دسترسی سریع</h3>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+                <a href="../pages/os-android.html" class="btn secondary" style="display:flex; align-items:center; gap:8px; padding:12px; text-decoration:none;">
+                  <img src="../icons/android.svg" alt="اندروید" style="width:20px; height:20px;" />
+                  دانلود اندروید
+                </a>
+                <a href="../pages/os-ios.html" class="btn secondary" style="display:flex; align-items:center; gap:8px; padding:12px; text-decoration:none;">
+                  <img src="../icons/apple.svg" alt="آیفون" style="width:20px; height:20px;" />
+                  دانلود آیفون
+                </a>
+                <a href="../pages/dns.html" class="btn secondary" style="display:flex; align-items:center; gap:8px; padding:12px; text-decoration:none;">
+                  <img src="../icons/dns.png" alt="DNS" style="width:20px; height:20px;" />
+                  تنظیمات DNS
+                </a>
+                <button class="btn primary" id="btn-get-config" style="display:flex; align-items:center; gap:8px; padding:12px;">
+                  <img src="https://api.iconify.design/material-symbols/vpn-key.svg?color=white" alt="کانفیگ" style="width:20px; height:20px;" />
+                  دریافت کانفیگ جدید
+                </button>
+              </div>
+            </article>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="recent-activity" style="margin-bottom:24px;">
+            <article class="card glass" style="padding:20px;">
+              <h3 style="margin:0 0 16px; color:var(--text);">فعالیت‌های اخیر</h3>
+              <div id="activity-list" style="display:flex; flex-direction:column; gap:12px;">
+                <div style="display:flex; align-items:center; gap:12px; padding:12px; background:rgba(255,255,255,0.03); border-radius:8px;">
+                  <img src="https://api.iconify.design/material-symbols/download.svg?color=%23F77E2D" alt="دانلود" style="width:20px; height:20px;" />
+                  <div style="flex:1;">
+                    <p style="margin:0; font-size:0.9rem; color:var(--text);">دانلود برنامه اندروید</p>
+                    <p style="margin:0; font-size:0.8rem; color:var(--muted);">۲ ساعت پیش</p>
+                  </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px; padding:12px; background:rgba(255,255,255,0.03); border-radius:8px;">
+                  <img src="https://api.iconify.design/material-symbols/vpn-key.svg?color=%2300D4AA" alt="کانفیگ" style="width:20px; height:20px;" />
+                  <div style="flex:1;">
+                    <p style="margin:0; font-size:0.9rem; color:var(--text);">دریافت کانفیگ WireGuard</p>
+                    <p style="margin:0; font-size:0.8rem; color:var(--muted);">۱ روز پیش</p>
+                  </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px; padding:12px; background:rgba(255,255,255,0.03); border-radius:8px;">
+                  <img src="https://api.iconify.design/material-symbols/login.svg?color=%23A855F7" alt="ورود" style="width:20px; height:20px;" />
+                  <div style="flex:1;">
+                    <p style="margin:0; font-size:0.9rem; color:var(--text);">ورود به حساب کاربری</p>
+                    <p style="margin:0; font-size:0.8rem; color:var(--muted);">۳ روز پیش</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Support Section -->
+          <div class="support-section">
+            <article class="card glass" style="padding:20px;">
+              <h3 style="margin:0 0 16px; color:var(--text);">پشتیبانی و راهنما</h3>
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:16px;">
+                <div style="text-align:center; padding:16px;">
+                  <img src="https://api.iconify.design/material-symbols/support-agent.svg?color=%23F77E2D" alt="پشتیبانی" style="width:48px; height:48px; margin-bottom:8px;" />
+                  <h4 style="margin:0 0 8px; color:var(--text);">پشتیبانی ۲۴/۷</h4>
+                  <p style="margin:0 0 12px; color:var(--muted); font-size:0.9rem;">تیم پشتیبانی آماده کمک به شما</p>
+                  <a href="https://t.me/ProTooLsSupport" class="btn primary" style="padding:8px 16px; text-decoration:none;" target="_blank">
+                    تماس با پشتیبانی
+                  </a>
+                </div>
+                <div style="text-align:center; padding:16px;">
+                  <img src="https://api.iconify.design/material-symbols/help.svg?color=%2300D4AA" alt="راهنما" style="width:48px; height:48px; margin-bottom:8px;" />
+                  <h4 style="margin:0 0 8px; color:var(--text);">راهنمای استفاده</h4>
+                  <p style="margin:0 0 12px; color:var(--muted); font-size:0.9rem;">آموزش نصب و تنظیمات</p>
+                  <a href="../pages/help.html" class="btn secondary" style="padding:8px 16px; text-decoration:none;">
+                    مشاهده راهنما
+                  </a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div data-component="footer"></div>
+  </div>
+  <script src="../assets/js/config.js" defer></script>
+  <script src="../assets/js/main.js" defer></script>
+  <script src="../assets/js/account.js" defer></script>
+</body>
+</html>

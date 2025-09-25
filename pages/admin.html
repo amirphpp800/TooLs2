@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pro Tools — Admin</title>
+  <meta name="color-scheme" content="dark" />
+  <link rel="icon" href="../icons/Logo.svg" type="image/svg+xml" />
+  <link rel="preload" href="../Font/DanaFaNum-Regular.woff" as="font" type="font/woff" crossorigin>
+  <link rel="preload" href="../Font/DanaFaNum-Bold.woff" as="font" type="font/woff" crossorigin>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body>
+  <div id="app">
+    <div data-component="header"></div>
+    <main id="main" class="section">
+      <section id="admin-page" class="glass" style="padding:16px;">
+        <h3 style="margin-top:0;">پنل مدیریت</h3>
+        <p style="color:var(--muted); margin-top:0;">مدیریت آدرس‌های اسکنر و تنظیمات سیستم</p>
+
+        <div style="max-width:480px; margin:40px auto; padding:0 16px;">
+          <article class="card glass" style="text-align:center; padding:24px;">
+            <div class="card-header" style="justify-content:center; margin-bottom:16px;">
+              <img src="https://api.iconify.design/mdi/shield-account.svg?color=%23F77E2D" alt="admin" style="width:32px; height:32px;" />
+              <h3 style="margin:0;">ورود ادمین</h3>
+            </div>
+            
+            <p style="color:var(--muted); margin:0 0 20px;">ابتدا نام کاربری و رمز را وارد کنید، سپس آیدی عددی تلگرام ادمین را بزنید تا کد ۵ رقمی ارسال شود.</p>
+            
+            <div id="admin-login-form">
+              <div style="margin-bottom:16px;">
+                <input id="adm-user" placeholder="ADMIN_USER" style="width:100%; padding:12px 16px; border-radius:12px; background:rgba(255,255,255,0.04); color:var(--text); border:1px solid var(--stroke); text-align:center;" />
+              </div>
+              <div style="margin-bottom:16px;">
+                <input id="adm-pass" placeholder="ADMIN_PASS" type="password" style="width:100%; padding:12px 16px; border-radius:12px; background:rgba(255,255,255,0.04); color:var(--text); border:1px solid var(--stroke); text-align:center;" />
+              </div>
+              <div style="margin-bottom:16px;">
+                <input id="adm-id" placeholder="آیدی عددی تلگرام ادمین" inputmode="numeric" style="width:100%; padding:12px 16px; border-radius:12px; background:rgba(255,255,255,0.04); color:var(--text); border:1px solid var(--stroke); text-align:center;" />
+              </div>
+              <div style="margin-bottom:16px;">
+                <button class="btn primary" id="btn-admin-send" style="width:100%; padding:12px;">ارسال کد</button>
+              </div>
+              
+              <div id="admin-otp-section" style="display:none;">
+                <div style="margin-bottom:16px;">
+                  <input id="adm-otp" placeholder="کد ۵ رقمی" inputmode="numeric" style="width:100%; padding:12px 16px; border-radius:12px; background:rgba(255,255,255,0.04); color:var(--text); border:1px solid var(--stroke); text-align:center;" />
+                </div>
+                <div style="margin-bottom:16px;">
+                  <button class="btn primary" id="btn-admin-verify" style="width:100%; padding:12px; background: linear-gradient(135deg, #22c55e, #16a34a); border-color: #16a34a;">تایید و ورود</button>
+                </div>
+              </div>
+            </div>
+            
+            <div id="adm-status" style="color:var(--muted); margin:16px 0; min-height:20px;"></div>
+          </article>
+        </div>
+
+        <!-- System Status Section -->
+        <div style="max-width:600px; margin:20px auto; padding:0 16px;">
+          <article class="card glass" style="padding:20px;">
+            <h3 style="margin:0 0 16px; color:var(--text); text-align:center;">وضعیت سیستم</h3>
+            
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:16px;">
+              <!-- KV Status -->
+              <div style="text-align:center; padding:16px; background:rgba(255,255,255,0.03); border-radius:12px; border:1px solid var(--stroke);">
+                <div style="margin-bottom:8px;">
+                  <img src="https://api.iconify.design/material-symbols/storage.svg?color=%23F77E2D" alt="KV" style="width:32px; height:32px;" />
+                </div>
+                <h4 style="margin:0 0 8px; color:var(--text);">KV Storage</h4>
+                <div id="kv-status" style="display:flex; align-items:center; justify-content:center; gap:8px;">
+                  <div class="status-indicator" id="kv-indicator"></div>
+                  <span id="kv-text">بررسی...</span>
+                </div>
+              </div>
+
+              <!-- API Status -->
+              <div style="text-align:center; padding:16px; background:rgba(255,255,255,0.03); border-radius:12px; border:1px solid var(--stroke);">
+                <div style="margin-bottom:8px;">
+                  <img src="https://api.iconify.design/material-symbols/api.svg?color=%2300D4AA" alt="API" style="width:32px; height:32px;" />
+                </div>
+                <h4 style="margin:0 0 8px; color:var(--text);">API Connection</h4>
+                <div id="api-status" style="display:flex; align-items:center; justify-content:center; gap:8px;">
+                  <div class="status-indicator" id="api-indicator"></div>
+                  <span id="api-text">بررسی...</span>
+                </div>
+              </div>
+
+              <!-- ENV Status -->
+              <div style="text-align:center; padding:16px; background:rgba(255,255,255,0.03); border-radius:12px; border:1px solid var(--stroke);">
+                <div style="margin-bottom:8px;">
+                  <img src="https://api.iconify.design/material-symbols/settings.svg?color=%23FFD93D" alt="ENV" style="width:32px; height:32px;" />
+                </div>
+                <h4 style="margin:0 0 8px; color:var(--text);">Environment</h4>
+                <div id="env-status" style="display:flex; align-items:center; justify-content:center; gap:8px;">
+                  <div class="status-indicator" id="env-indicator"></div>
+                  <span id="env-text">بررسی...</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:16px; text-align:center;">
+              <button class="btn secondary" id="btn-refresh-status" style="padding:8px 16px;">
+                <img src="https://api.iconify.design/material-symbols/refresh.svg?color=%23F77E2D" alt="تازه‌سازی" style="width:16px; height:16px;" />
+                تازه‌سازی وضعیت
+              </button>
+            </div>
+          </article>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div id="admin-dashboard" style="display:none;">
+          <div class="container">
+            <!-- Scanner Management -->
+            <section class="section">
+              <article class="card glass" style="padding:24px; margin-bottom:24px;">
+                <h3 style="margin:0 0 16px; color:var(--text);">مدیریت آدرس‌های اسکنر</h3>
+                
+                <!-- Country Selection -->
+                <div style="margin-bottom:20px;">
+                  <label style="display:block; margin-bottom:8px; color:var(--text);">انتخاب کشور:</label>
+                  <select id="country-select" style="width:100%; padding:12px; border-radius:8px; background:rgba(255,255,255,0.04); color:var(--text); border:1px solid var(--stroke);">
+                    <option value="uk">انگلیس (UK)</option>
+                    <option value="tr">ترکیه (TR)</option>
+                    <option value="de">آلمان (DE)</option>
+                    <option value="qa">قطر (QA)</option>
+                    <option value="dz">الجزایر (DZ)</option>
+                  </select>
+                </div>
+
+                <!-- Add Addresses -->
+                <div style="margin-bottom:20px;">
+                  <label style="display:block; margin-bottom:8px; color:var(--text);">اضافه کردن آدرس‌ها:</label>
+                  <textarea id="addresses-input" placeholder="آدرس‌ها را هر کدام در یک خط وارد کنید (فقط IPv4 بدون پورت)&#10;مثال:&#10;1.2.3.4&#10;5.6.7.8" style="width:100%; height:120px; padding:12px; border-radius:8px; background:rgba(255,255,255,0.04); color:var(--text); border:1px solid var(--stroke); resize:vertical;"></textarea>
+                </div>
+
+                <div style="display:flex; gap:12px; margin-bottom:20px;">
+                  <button class="btn primary" id="btn-add-addresses" style="flex:1;">
+                    اضافه کردن آدرس‌ها
+                  </button>
+                  <button class="btn secondary" id="btn-clear-addresses" style="flex:1;">
+                    پاک کردن همه
+                  </button>
+                </div>
+
+                <!-- Current Addresses -->
+                <div>
+                  <h4 style="margin:0 0 12px; color:var(--text);">آدرس‌های موجود:</h4>
+                  <div id="addresses-list" style="max-height:300px; overflow-y:auto; border:1px solid var(--stroke); border-radius:8px; background:rgba(255,255,255,0.02);">
+                    <div style="padding:20px; text-align:center; color:var(--muted);">در حال بارگذاری...</div>
+                  </div>
+                </div>
+              </article>
+            </section>
+
+            <!-- Statistics -->
+            <section class="section">
+              <article class="card glass" style="padding:24px;">
+                <h3 style="margin:0 0 16px; color:var(--text);">آمار سیستم</h3>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
+                  <div style="text-align:center; padding:16px; background:rgba(255,255,255,0.03); border-radius:8px;">
+                    <div style="font-size:2rem; font-weight:600; color:var(--accent);" id="total-addresses">0</div>
+                    <div style="color:var(--muted); font-size:0.9rem;">کل آدرس‌ها</div>
+                  </div>
+                  <div style="text-align:center; padding:16px; background:rgba(255,255,255,0.03); border-radius:8px;">
+                    <div style="font-size:2rem; font-weight:600; color:#00D4AA;" id="used-addresses">0</div>
+                    <div style="color:var(--muted); font-size:0.9rem;">آدرس‌های استفاده شده</div>
+                  </div>
+                  <div style="text-align:center; padding:16px; background:rgba(255,255,255,0.03); border-radius:8px;">
+                    <div style="font-size:2rem; font-weight:600; color:#FFD93D;" id="remaining-addresses">0</div>
+                    <div style="color:var(--muted); font-size:0.9rem;">آدرس‌های باقیمانده</div>
+                  </div>
+                </div>
+              </article>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div data-component="footer"></div>
+  </div>
+  <script src="../assets/js/config.js" defer></script>
+  <script src="../assets/js/main.js" defer></script>
+  <script src="../assets/js/admin.js" defer></script>
+</body>
+</html>

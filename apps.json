@@ -1,0 +1,19 @@
+{
+  "apps": [
+    { "name": "DNS", "os": ["android"], "icon": "icons/download-Apps/dns.png", "link": "https://play.google.com/store/apps/details?id=com.frostnerd.dnschanger&pcampaignid=web_share" },
+    { "name": "DNS", "os": ["ios"],     "icon": "icons/download-Apps/dns.png", "link": "https://apps.apple.com/app/1-1-1-1-faster-internet/id1423538627" },
+    { "name": "Unicorn HTTPS", "os": ["ios"], "icon": "icons/download-Apps/uniron.png", "link": "https://apps.apple.com/us/app/unicorn-https/id1466584968" },
+
+    { "name": "WireGuard", "os": ["android"], "icon": "icons/download-Apps/wireguard.png", "link": "https://play.google.com/store/apps/details?id=com.wireguard.android&pcampaignid=web_share" },
+    { "name": "WireGuard", "os": ["ios"],     "icon": "icons/download-Apps/wireguard.png", "link": "https://apps.apple.com/us/app/wireguard/id1441195209" },
+    { "name": "WireGuard", "os": ["windows"], "icon": "icons/download-Apps/wireguard.png", "link": "https://www.wireguard.com/install/" },
+
+    { "name": "OpenVPN", "os": ["android"], "icon": "icons/download-Apps/openvpn.png", "link": "https://play.google.com/store/apps/details?id=net.openvpn.openvpn&pcampaignid=web_share" },
+    { "name": "OpenVPN", "os": ["ios"],     "icon": "icons/download-Apps/openvpn.png", "link": "https://apps.apple.com/us/app/openvpn-connect/id590379981" },
+    { "name": "OpenVPN", "os": ["windows"], "icon": "icons/download-Apps/openvpn.png", "link": "https://openvpn.net/client/" },
+
+    { "name": "WG Tunnel", "os": ["android"], "icon": "icons/download-Apps/wgtunnel.png", "link": "https://github.com/wgtunnel/wgtunnel/releases" },
+    { "name": "WG Tunnel", "os": ["ios"], "icon": "icons/download-Apps/wgtunnel.png", "link": "https://github.com/wgtunnel/wgtunnel/releases" },
+    { "name": "WG Tunnel", "os": ["windows"], "icon": "icons/download-Apps/wgtunnel.png", "link": "https://github.com/wgtunnel/wgtunnel/releases" }
+  ]
+}

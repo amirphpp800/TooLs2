@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pro TooLs — اسکنر آدرس</title>
+  <meta name="color-scheme" content="dark" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://api.iconify.design; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https:; font-src 'self';" />
+  <link rel="icon" href="../icons/Logo.svg" type="image/svg+xml" />
+  <link rel="preload" href="../Font/DanaFaNum-Regular.woff" as="font" type="font/woff" crossorigin>
+  <link rel="preload" href="../Font/DanaFaNum-Bold.woff" as="font" type="font/woff" crossorigin>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body>
+  <div id="app">
+    <div data-component="header"></div>
+    <main id="main">
+      <section class="section">
+        <div class="container" style="max-width:600px;">
+          <article class="card glass" style="padding:24px; text-align:center;">
+            <div class="card-header" style="justify-content:center; margin-bottom:20px;">
+              <img src="https://api.iconify.design/material-symbols/radar.svg?color=%23F77E2D" alt="اسکنر" style="width:48px; height:48px;" />
+              <h2 style="margin:0;">اسکنر آدرس</h2>
+            </div>
+            
+            <p style="color:var(--muted); margin:0 0 24px;">برای دریافت آدرس اسکنر، کشور مورد نظر خود را انتخاب کنید</p>
+            
+            <!-- Country Selection -->
+            <div style="margin-bottom:20px;">
+              <label style="display:block; margin-bottom:8px; color:var(--text); text-align:right;">انتخاب کشور:</label>
+              <select id="scanner-country" style="width:100%; padding:12px; border-radius:8px; background:rgba(255,255,255,0.04); color:var(--text); border:1px solid var(--stroke);">
+                <option value="uk">🇬🇧 انگلیس (UK)</option>
+                <option value="us">🇺🇸 آمریکا (US)</option>
+                <option value="de">🇩🇪 آلمان (DE)</option>
+                <option value="nl">🇳🇱 هلند (NL)</option>
+                <option value="fr">🇫🇷 فرانسه (FR)</option>
+              </select>
+            </div>
+
+            <button class="btn primary large" id="btn-get-address" style="width:100%; margin-bottom:20px;">
+              <img src="https://api.iconify.design/material-symbols/download.svg?color=white" alt="دریافت" style="width:20px; height:20px;" />
+              دریافت آدرس
+            </button>
+
+            <div id="scanner-status" style="color:var(--muted); margin:16px 0; min-height:20px;"></div>
+          </article>
+
+          <!-- Address Result -->
+          <div id="address-result" style="display:none; margin-top:20px;">
+            <article class="card glass" style="padding:24px;">
+              <h3 style="margin:0 0 16px; color:var(--text); text-align:center;">آدرس دریافت شده</h3>
+              
+              <div style="background:rgba(255,255,255,0.06); border-radius:12px; padding:20px; margin-bottom:20px; text-align:center;">
+                <div style="font-family:monospace; font-size:1.2rem; color:var(--accent); margin-bottom:12px; word-break:break-all;" id="received-address">
+                  <!-- Address will be shown here -->
+                </div>
+                <button class="btn secondary" id="btn-copy-address" style="padding:8px 16px;">
+                  <img src="https://api.iconify.design/material-symbols/content-copy.svg?color=%23F77E2D" alt="کپی" style="width:16px; height:16px;" />
+                  کپی آدرس
+                </button>
+              </div>
+
+              <div style="background:rgba(255,255,255,0.03); border-radius:8px; padding:16px; margin-bottom:16px;">
+                <h4 style="margin:0 0 8px; color:var(--text); font-size:1rem;">تست زنده بودن آدرس:</h4>
+                <p style="margin:0 0 12px; color:var(--muted); font-size:0.9rem;">
+                  برای تست زنده بودن آدرس، به سایت زیر بروید و آدرس را تست کنید:
+                </p>
+                <a href="https://check-host.net/check-ping" target="_blank" class="btn primary" style="width:100%; text-decoration:none; margin-bottom:12px;">
+                  <img src="https://api.iconify.design/material-symbols/open-in-new.svg?color=white" alt="باز کردن" style="width:16px; height:16px;" />
+                  باز کردن Check-Host.net
+                </a>
+                <div style="background:rgba(255,193,7,0.1); border:1px solid rgba(255,193,7,0.3); border-radius:6px; padding:12px;">
+                  <p style="margin:0; color:#ffc107; font-size:0.85rem;">
+                    ⚠️ <strong>نکته مهم:</strong> حتماً نودهای ایران را بررسی کنید و مطمئن شوید که 4/4 سبز باشند.
+                  </p>
+                </div>
+              </div>
+
+              <div style="text-align:center;">
+                <button class="btn secondary" id="btn-get-another" style="padding:10px 20px;">
+                  دریافت آدرس دیگر
+                </button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div data-component="footer"></div>
+  </div>
+  
+  <script src="../assets/js/config.js" defer></script>
+  <script src="../assets/js/main.js" defer></script>
+  <script src="../assets/js/scanner.js" defer></script>
+</body>
+</html>
