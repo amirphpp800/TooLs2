@@ -1,27 +1,6 @@
 (function(){
   'use strict';
   const $ = (s, c=document)=>c.querySelector(s);
-  // KV Storage functions
-  async function getFromKV(key) {
-    try {
-      const res = await fetch(`/api/kv/${key}`);
-      if (!res.ok) return null;
-      return await res.json();
-    } catch (e) {
-      return null;
-    }
-  }
-
-  async function saveToKV(key, value) {
-    await fetch(`/api/kv/${key}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(value)
-    });
-  }
-
   async function getAddress() {
     const country = $('#scanner-country').value;
     const statusEl = $('#scanner-status');
@@ -30,34 +9,25 @@
     try {
       statusEl.textContent = 'در حال دریافت آدرس...';
       
-      // Get available addresses for the country
-      const addresses = await getFromKV(`scanner_addresses_${country}`) || [];
+      // Get address from the new scanner API
+      const res = await fetch(`/api/scanner/addresses?country=${country}`);
       
-      if (addresses.length === 0) {
-        statusEl.textContent = 'متأسفانه آدرسی برای این کشور موجود نیست.';
+      if (!res.ok) {
+        if (res.status === 404) {
+          statusEl.textContent = 'متأسفانه آدرسی برای این کشور موجود نیست.';
+        } else {
+          statusEl.textContent = 'خطا در دریافت آدرس. لطفاً دوباره تلاش کنید.';
+        }
         return;
       }
 
-      // Get a random address
-      const randomIndex = Math.floor(Math.random() * addresses.length);
-      const selectedAddress = addresses[randomIndex];
-
-      // Remove the address from available list
-      addresses.splice(randomIndex, 1);
-      await saveToKV(`scanner_addresses_${country}`, addresses);
-
-      // Add to used addresses list
-      const usedAddresses = await getFromKV(`used_addresses_${country}`) || [];
-      usedAddresses.push({
-        address: selectedAddress,
-        timestamp: Date.now(),
-        user_ip: 'hidden' // In real implementation, you might want to track this
-      });
-      await saveToKV(`used_addresses_${country}`, usedAddresses);
-
+      const data = await res.json();
+      
       // Show the address to user
-      showAddressResult(selectedAddress);
-      statusEl.textContent = '';
+      showAddressResult(data.address);
+      statusEl.textContent = data.remaining > 0 ? 
+        `آدرس دریافت شد. ${data.remaining} آدرس دیگر موجود است.` : 
+        'آدرس دریافت شد. این آخرین آدرس موجود بود.';
 
     } catch (error) {
       console.error('Error getting address:', error);
@@ -135,10 +105,40 @@
     document.querySelector('.card').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  async function updateCountryStats() {
+    const country = $('#scanner-country').value;
+    const statusEl = $('#scanner-status');
+    
+    try {
+      const res = await fetch('/api/scanner/addresses', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ country })
+      });
+      
+      if (res.ok) {
+        const data = await res.json();
+        if (data.available > 0) {
+          statusEl.textContent = `${data.available} آدرس برای این کشور موجود است.`;
+        } else {
+          statusEl.textContent = 'متأسفانه آدرسی برای این کشور موجود نیست.';
+        }
+      }
+    } catch (error) {
+      console.error('Error getting stats:', error);
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', async () => {
     // Event listeners
     $('#btn-get-address')?.addEventListener('click', getAddress);
     $('#btn-copy-address')?.addEventListener('click', copyAddress);
     $('#btn-get-another')?.addEventListener('click', resetForm);
+    $('#scanner-country')?.addEventListener('change', updateCountryStats);
+    
+    // Load initial stats
+    updateCountryStats();
   });
 })();
